@@ -253,7 +253,7 @@ int main() {
     int opcion;
     do {
         cout << "\n=========================================\n";
-        cout << "        SISTEMA DE GESTION DE TIENDAS    \n";
+        cout << "   MENÚ PRINCIPAL DEL SISTEMA LA TIENDA    \n";
         cout << "=========================================\n";
         cout << "1. Registrar Tienda\n";
         cout << "2. Actualizar Tienda\n";
