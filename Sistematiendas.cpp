@@ -82,6 +82,7 @@ void registrarTienda() {
 
     cout << "\nTienda registrada con exito.\n";
 }
+
 void actualizarTienda() {
     int id;
     cout << "\nIngrese ID de la tienda a actualizar: ";
