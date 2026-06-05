@@ -196,3 +196,90 @@ void calcularAlquilerDeTienda() {
     cout << "Publicidad: " << (tiendas[indice].publicidad ? "Si" : "No") << endl;
     cout << "Alquiler calculado: S/. " << alquiler << endl;
 }
+void reporteAlquileres() {
+    if (totalTiendas == 0) {
+        cout << "\nNo hay tiendas registradas para generar el reporte.\n";
+        return;
+    }
+    cout << "\n=========================================\n";
+    cout << "       REPORTE GENERAL DE ALQUILERES     \n";
+    cout << "=========================================\n";
+    for (int i = 0; i < totalTiendas; ++i) {
+        calcularAlquiler(tiendas[i]);
+        cout << "ID: " << tiendas[i].id 
+             << " | Nombre: " << tiendas[i].nombre 
+             << " | Alquiler Total: S/. " << tiendas[i].alquiler << endl;
+    }
+}
+
+void reporteCobrosAdicionales() {
+    if (totalTiendas == 0) {
+        cout << "\nNo hay tiendas registradas para generar el reporte.\n";
+        return;
+    }
+    cout << "\n=========================================\n";
+    cout << "      REPORTE DE COBROS ADICIONALES      \n";
+    cout << "=========================================\n";
+    for (int i = 0; i < totalTiendas; ++i) {
+        float mant = tiendas[i].mantenimiento ? 200 : 0;
+        float pub = tiendas[i].publicidad ? 300 : 0;
+        float comision = (tiendas[i].ventasMensuales > 10000) ? (tiendas[i].ventasMensuales * 0.05) : 0;
+        float totalAdicional = mant + pub + comision;
+
+        cout << "ID: " << tiendas[i].id << " | Tienda: " << tiendas[i].nombre << endl;
+        cout << "  - Mantenimiento: S/. " << mant << endl;
+        cout << "  - Publicidad: S/. " << pub << endl;
+        cout << "  - Comision (5%): S/. " << comision << endl;
+        cout << "  - Total Adicionales: S/. " << totalAdicional << endl;
+        cout << "-----------------------------------------\n";
+    }
+}
+
+void calcularTotalAlquiler() {
+    if (totalTiendas == 0) {
+        cout << "\nNo hay tiendas registradas.\n";
+        return;
+    }
+    float sumaAlquileres = 0;
+    for (int i = 0; i < totalTiendas; ++i) {
+        sumaAlquileres += calcularAlquiler(tiendas[i]);
+    }
+    cout << "\n=========================================\n";
+    cout << " MONTO TOTAL A RECAUDAR POR ALQUILERES: S/. " << sumaAlquileres << endl;
+    cout << "=========================================\n";
+}
+
+int main() {
+    int opcion;
+    do {
+        cout << "\n=========================================\n";
+        cout << "        SISTEMA DE GESTION DE TIENDAS    \n";
+        cout << "=========================================\n";
+        cout << "1. Registrar Tienda\n";
+        cout << "2. Actualizar Tienda\n";
+        cout << "3. Buscar Tienda\n";
+        cout << "4. Mostrar Todas las Tiendas\n";
+        cout << "5. Calcular Alquiler de una Tienda\n";
+        cout << "6. Reporte General de Alquileres (Int. 5)\n";
+        cout << "7. Reporte de Cobros Adicionales (Int. 5)\n";
+        cout << "8. Calcular Total Recaudado (Int. 5)\n";
+        cout << "9. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: registrarTienda(); break;
+            case 2: actualizarTienda(); break;
+            case 3: buscarTienda(); break;
+            case 4: mostrarTiendas(); break;
+            case 5: calcularAlquilerDeTienda(); break;
+            case 6: reporteAlquileres(); break;
+            case 7: reporteCobrosAdicionales(); break;
+            case 8: calcularTotalAlquiler(); break;
+            case 9: cout << "\nSaliendo del sistema...\n"; break;
+            default: cout << "\nOpcion no valida. Intente de nuevo.\n"; break;
+        }
+    } while (opcion != 9);
+
+    return 0;
+}
