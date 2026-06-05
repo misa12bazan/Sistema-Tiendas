@@ -151,3 +151,4 @@ void mostrarTiendas() {
         cout << "Ventas: " << t.ventasMensuales << endl;
     }
 }
+.
