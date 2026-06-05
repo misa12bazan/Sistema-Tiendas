@@ -82,3 +82,72 @@ void registrarTienda() {
 
     cout << "\nTienda registrada con exito.\n";
 }
+void actualizarTienda() {
+    int id;
+    cout << "\nIngrese ID de la tienda a actualizar: ";
+    cin >> id;
+
+    int indice = buscarTiendaPorID(id);
+
+    if (indice == -1) {
+        cout << "Tienda no encontrada.\n";
+        return;
+    }
+
+    cout << "\n--- Datos actuales de la tienda ---\n";
+    cout << "Nombre: " << tiendas[indice].nombre << endl;
+    cout << "Categoría: " << tiendas[indice].categoria << endl;
+    cout << "Ventas mensuales: S/. " << tiendas[indice].ventasMensuales << endl;
+
+    cout << "\n--- Actualizar los Datos de la tienda "
+         << tiendas[indice].nombre << " ---\n";
+
+    cout << "Nueva categoria: ";
+    cin.ignore();
+    getline(cin, tiendas[indice].categoria);
+
+    do {
+        cout << "Nuevas Ventas mensuales: ";
+        cin >> tiendas[indice].ventasMensuales;
+
+        if (tiendas[indice].ventasMensuales < 0) {
+            cout << "El monto de venta debe ser positivo.\n";
+        }
+
+    } while (tiendas[indice].ventasMensuales < 0);
+
+    cout << "Actualizado correctamente.\n";
+}
+
+void buscarTienda() {
+    int id;
+
+    cout << "\nIngrese ID de la tienda: ";
+    cin >> id;
+
+    int indice = buscarTiendaPorID(id);
+
+    if (indice == -1) {
+        cout << "Tienda no encontrada.\n";
+        return;
+    }
+
+    Tienda &t = tiendas[indice];
+
+    cout << "Nombre: " << t.nombre << endl;
+    cout << "Categoria: " << t.categoria << endl;
+    cout << "Ventas: " << t.ventasMensuales << endl;
+}
+
+void mostrarTiendas() {
+    for (int i = 0; i < totalTiendas; ++i) {
+
+        Tienda &t = tiendas[i];
+
+        cout << "ID: " << t.id << endl;
+        cout << "Nombre: " << t.nombre << endl;
+        cout << "Categoria: " << t.categoria << endl;
+        cout << "Ventas: " << t.ventasMensuales << endl;
+    }
+}
+.
