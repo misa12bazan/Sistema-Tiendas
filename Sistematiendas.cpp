@@ -151,4 +151,48 @@ void mostrarTiendas() {
         cout << "Ventas: " << t.ventasMensuales << endl;
     }
 }
-.
+
+float calcularAlquiler(Tienda &t) {
+    float alquiler = 1000;
+
+    if (t.mantenimiento) {
+        alquiler += 200;
+    }
+
+    if (t.publicidad) {
+        alquiler += 300;
+    }
+
+    if (t.ventasMensuales > 10000) {
+        alquiler += t.ventasMensuales * 0.05;
+    }
+
+    t.alquiler = alquiler;
+
+    return alquiler;
+}
+
+void calcularAlquilerDeTienda() {
+    int id;
+
+    cout << "\nIngrese ID de la tienda: ";
+    cin >> id;
+
+    int indice = buscarTiendaPorID(id);
+
+    if (indice == -1) {
+        cout << "Tienda no encontrada.\n";
+        return;
+    }
+
+    float alquiler = calcularAlquiler(tiendas[indice]);
+
+    cout << "\n Detalle del alquiler \n";
+    cout << "ID: " << tiendas[indice].id << endl;
+    cout << "Nombre: " << tiendas[indice].nombre << endl;
+    cout << "Categoria: " << tiendas[indice].categoria << endl;
+    cout << "Ventas mensuales: S/. " << tiendas[indice].ventasMensuales << endl;
+    cout << "Mantenimiento: " << (tiendas[indice].mantenimiento ? "Si" : "No") << endl;
+    cout << "Publicidad: " << (tiendas[indice].publicidad ? "Si" : "No") << endl;
+    cout << "Alquiler calculado: S/. " << alquiler << endl;
+}
