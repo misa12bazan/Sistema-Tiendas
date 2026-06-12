@@ -259,10 +259,10 @@ int main() {
         cout << "2. Actualizar Tienda\n";
         cout << "3. Buscar Tienda\n";
         cout << "4. Mostrar Todas las Tiendas\n";
-        cout << "5. Calcular Alquiler de una Tienda\n";
-        cout << "6. Reporte General de Alquileres (Int. 5)\n";
-        cout << "7. Reporte de Cobros Adicionales (Int. 5)\n";
-        cout << "8. Calcular Total Recaudado (Int. 5)\n";
+        cout << "5. Calcular Alquiler de una Tienda \n";
+        cout << "6. Reporte General de Alquileres \n";
+        cout << "7. Reporte de Cobros Adicionales \n";
+        cout << "8. Calcular Total Recaudado \n";
         cout << "9. Salir\n";
         cout << "Seleccione una opcion: ";
         cin >> opcion;
