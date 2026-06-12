@@ -16,6 +16,7 @@ struct Tienda {
 
 Tienda tiendas[MAX_TIENDAS];
 int totalTiendas = 0;
+float calcularAlquiler(Tienda &t);
 
 int buscarTiendaPorID(int id) {
     for (int i = 0; i < totalTiendas; ++i) {
@@ -26,14 +27,13 @@ int buscarTiendaPorID(int id) {
 
 void registrarTienda() {
 
-    int op;
-
     if (totalTiendas >= MAX_TIENDAS) {
         cout << "\nLímite de tiendas alcanzado.\n";
         return;
     }
 
     Tienda t;
+
     cout << "\nIngrese ID de la tienda: ";
     cin >> t.id;
 
@@ -43,6 +43,7 @@ void registrarTienda() {
     }
 
     cin.ignore();
+
     cout << "Ingrese Nombre de la tienda: ";
     getline(cin, t.nombre);
 
@@ -56,6 +57,7 @@ void registrarTienda() {
         if (t.ventasMensuales <= 0) {
             cout << "El monto de venta debe ser positivo.\n";
         }
+
     } while (t.ventasMensuales <= 0);
 
     cout << "Servicios adicionales:\n";
@@ -67,6 +69,7 @@ void registrarTienda() {
         if (t.mantenimiento != 0 && t.mantenimiento != 1) {
             cout << "Opción inválida. Ingrese 1 o 0.\n";
         }
+
     } while (t.mantenimiento != 0 && t.mantenimiento != 1);
 
     do {
@@ -76,9 +79,27 @@ void registrarTienda() {
         if (t.publicidad != 0 && t.publicidad != 1) {
             cout << "Opción inválida. Ingrese 1 o 0.\n";
         }
+
     } while (t.publicidad != 0 && t.publicidad != 1);
 
+    // Guardar tienda
     tiendas[totalTiendas++] = t;
+
+    // Mostrar datos registrados
+    cout << "\n====================================\n";
+    cout << "      DATOS REGISTRADOS\n";
+    cout << "====================================\n";
+    cout << "ID: " << t.id << endl;
+    cout << "Nombre: " << t.nombre << endl;
+    cout << "Categoria: " << t.categoria << endl;
+    cout << "Ventas mensuales: S/. " << t.ventasMensuales << endl;
+    cout << "Mantenimiento: " << (t.mantenimiento ? "Si" : "No") << endl;
+    cout << "Publicidad: " << (t.publicidad ? "Si" : "No") << endl;
+
+    float alquiler = calcularAlquiler(t);
+
+    cout << "Alquiler estimado: S/. " << alquiler << endl;
+    cout << "====================================\n";
 
     cout << "\nTienda registrada con exito.\n";
 }
