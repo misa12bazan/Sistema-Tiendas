@@ -492,6 +492,11 @@ void ListaTiendas::calcularTotalAlquiler(PilaHistorial &historial) {
         actual = actual->sig;
     }
 
+    cout << "\nMonto total a recaudar por alquileres: S/. " << total << endl;
+
+    historial.apilar("Se calculo el total recaudado por alquileres", 0);
+}
+
 // ================= REGISTRO =================
 
 void registrarTienda(ListaTiendas &lista, ColaMantenimiento &cola, PilaHistorial &historial) {
@@ -664,8 +669,4 @@ int main() {
     } while (opcion != 13);
 
     return 0;
-}
-    cout << "\nMonto total a recaudar por alquileres: S/. " << total << endl;
-
-    historial.apilar("Se calculo el total recaudado por alquileres", 0);
 }
