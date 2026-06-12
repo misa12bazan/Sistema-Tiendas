@@ -224,3 +224,275 @@ void ColaMantenimiento::mostrar() {
         actual = actual->sig;
     }
 }
+
+// ================= LISTA ENLAZADA =================
+
+struct NodoTienda {
+    Tienda dato;
+    NodoTienda* sig;
+};
+
+typedef NodoTienda* pnodoTienda;
+
+class ListaTiendas {
+private:
+    pnodoTienda pL;
+    int cantTiendas;
+
+public:
+    ListaTiendas();
+    ~ListaTiendas();
+    int obtenerCantidad();
+    pnodoTienda buscarPorID(int id);
+    void insertarFinal(Tienda t);
+    int actualizar();
+    void buscar();
+    void mostrar();
+    int calcularAlquiler(Tienda &t);
+    void calcularAlquilerDeTienda(PilaHistorial &historial);
+    void reporteAlquileres(PilaHistorial &historial);
+    void reporteCobrosAdicionales(PilaHistorial &historial);
+    void calcularTotalAlquiler(PilaHistorial &historial);
+    bool estaVacia();
+};
+
+ListaTiendas::ListaTiendas() {
+    pL = NULL;
+    cantTiendas = 0;
+}
+
+int ListaTiendas::obtenerCantidad() {
+    return cantTiendas;
+}
+
+ListaTiendas::~ListaTiendas() {
+    pnodoTienda p, q;
+
+    p = pL;
+
+    while (p != NULL) {
+        q = p->sig;
+        delete p;
+        p = q;
+    }
+
+    pL = NULL;
+}
+
+bool ListaTiendas::estaVacia() {
+    return pL == NULL;
+}
+
+pnodoTienda ListaTiendas::buscarPorID(int id) {
+    pnodoTienda actual = pL;
+
+    while (actual != NULL) {
+        if (actual->dato.id == id) {
+            return actual;
+        }
+
+        actual = actual->sig;
+    }
+
+    return NULL;
+}
+
+void ListaTiendas::insertarFinal(Tienda t) {
+    pnodoTienda nuevo = new NodoTienda;
+    nuevo->dato = t;
+    nuevo->sig = NULL;
+
+    if (pL == NULL) {
+        pL = nuevo;
+    } else {
+        pnodoTienda aux = pL;
+
+        while (aux->sig != NULL) {
+            aux = aux->sig;
+        }
+
+        aux->sig = nuevo;
+    }
+}
+
+int ListaTiendas::actualizar() {
+    int id = leerEnteroPositivo("\nIngrese ID de la tienda a actualizar: ");
+
+    pnodoTienda tienda = buscarPorID(id);
+
+    if (tienda == NULL) {
+        cout << "Tienda no encontrada.\n";
+        return -1;
+    }
+
+    cout << "\n--- Datos actuales ---\n";
+    cout << "Nombre: " << tienda->dato.nombre << endl;
+    cout << "Categoria: " << tienda->dato.categoria << endl;
+    cout << "Ventas mensuales: S/. " << tienda->dato.ventasMensuales << endl;
+
+    cin.ignore();
+    cout << "\nNueva categoria: ";
+    getline(cin, tienda->dato.categoria);
+
+    tienda->dato.ventasMensuales = leerEnteroPositivo("Nuevas ventas mensuales: ");
+    tienda->dato.mantenimiento = leerOpcion01("Â¿Mantenimiento? 1 = Si, 0 = No: ");
+    tienda->dato.publicidad = leerOpcion01("Â¿Publicidad? 1 = Si, 0 = No: ");
+
+    cout << "\nTienda actualizada correctamente.\n";
+
+    return id;
+}
+
+void ListaTiendas::buscar() {
+    int id = leerEnteroPositivo("\nIngrese ID de la tienda: ");
+
+    pnodoTienda tienda = buscarPorID(id);
+
+    if (tienda == NULL) {
+        cout << "Tienda no encontrada.\n";
+        return;
+    }
+
+    cout << "\n===== DATOS DE LA TIENDA =====\n";
+    cout << "ID: " << tienda->dato.id << endl;
+    cout << "Nombre: " << tienda->dato.nombre << endl;
+    cout << "Categoria: " << tienda->dato.categoria << endl;
+    cout << "Ventas mensuales: S/. " << tienda->dato.ventasMensuales << endl;
+    cout << "Mantenimiento: " << (tienda->dato.mantenimiento ? "Si" : "No") << endl;
+    cout << "Publicidad: " << (tienda->dato.publicidad ? "Si" : "No") << endl;
+}
+
+void ListaTiendas::mostrar() {
+    if (pL == NULL) {
+        cout << "\nNo hay tiendas registradas.\n";
+        return;
+    }
+
+    pnodoTienda actual = pL;
+
+    cout << "\n===== LISTA DE TIENDAS =====\n";
+
+    while (actual != NULL) {
+        cout << "\nID: " << actual->dato.id << endl;
+        cout << "Nombre: " << actual->dato.nombre << endl;
+        cout << "Categoria: " << actual->dato.categoria << endl;
+        cout << "Ventas mensuales: S/. " << actual->dato.ventasMensuales << endl;
+        cout << "Mantenimiento: " << (actual->dato.mantenimiento ? "Si" : "No") << endl;
+        cout << "Publicidad: " << (actual->dato.publicidad ? "Si" : "No") << endl;
+
+        actual = actual->sig;
+    }
+}
+
+int ListaTiendas::calcularAlquiler(Tienda &t) {
+    int alquiler = 1000;
+
+    if (t.mantenimiento) {
+        alquiler += 200;
+    }
+
+    if (t.publicidad) {
+        alquiler += 300;
+    }
+
+    if (t.ventasMensuales > 10000) {
+        alquiler += t.ventasMensuales * 5 / 100;
+    }
+
+    t.alquiler = alquiler;
+    return alquiler;
+}
+
+void ListaTiendas::calcularAlquilerDeTienda(PilaHistorial &historial) {
+    int id = leerEnteroPositivo("\nIngrese ID de la tienda: ");
+
+    pnodoTienda tienda = buscarPorID(id);
+
+    if (tienda == NULL) {
+        cout << "Tienda no encontrada.\n";
+        return;
+    }
+
+    int alquiler = calcularAlquiler(tienda->dato);
+
+    cout << "\n===== DETALLE DEL ALQUILER =====\n";
+    cout << "ID: " << tienda->dato.id << endl;
+    cout << "Nombre: " << tienda->dato.nombre << endl;
+    cout << "Categoria: " << tienda->dato.categoria << endl;
+    cout << "Ventas mensuales: S/. " << tienda->dato.ventasMensuales << endl;
+    cout << "Mantenimiento: " << (tienda->dato.mantenimiento ? "Si" : "No") << endl;
+    cout << "Publicidad: " << (tienda->dato.publicidad ? "Si" : "No") << endl;
+    cout << "Alquiler calculado: S/. " << alquiler << endl;
+
+    historial.apilar("Se calculo alquiler de la tienda", id);
+}
+
+void ListaTiendas::reporteAlquileres(PilaHistorial &historial) {
+    if (pL == NULL) {
+        cout << "\nNo hay tiendas registradas.\n";
+        return;
+    }
+
+    pnodoTienda actual = pL;
+
+    cout << "\n===== REPORTE GENERAL DE ALQUILERES =====\n";
+
+    while (actual != NULL) {
+        calcularAlquiler(actual->dato);
+
+        cout << "ID: " << actual->dato.id
+             << " | Nombre: " << actual->dato.nombre
+             << " | Alquiler Total: S/. " << actual->dato.alquiler << endl;
+
+        actual = actual->sig;
+    }
+
+    historial.apilar("Se genero reporte general de alquileres", 0);
+}
+
+void ListaTiendas::reporteCobrosAdicionales(PilaHistorial &historial) {
+    if (pL == NULL) {
+        cout << "\nNo hay tiendas registradas.\n";
+        return;
+    }
+
+    pnodoTienda actual = pL;
+
+    cout << "\n===== REPORTE DE COBROS ADICIONALES =====\n";
+
+    while (actual != NULL) {
+        int mant = actual->dato.mantenimiento ? 200 : 0;
+        int pub = actual->dato.publicidad ? 300 : 0;
+        int comision = actual->dato.ventasMensuales > 10000 ? actual->dato.ventasMensuales * 5 / 100 : 0;
+        int totalAdicional = mant + pub + comision;
+
+        cout << "\nID: " << actual->dato.id << " | Tienda: " << actual->dato.nombre << endl;
+        cout << "Mantenimiento: S/. " << mant << endl;
+        cout << "Publicidad: S/. " << pub << endl;
+        cout << "Comision 5%: S/. " << comision << endl;
+        cout << "Total adicionales: S/. " << totalAdicional << endl;
+
+        actual = actual->sig;
+    }
+
+    historial.apilar("Se genero reporte de cobros adicionales", 0);
+}
+
+void ListaTiendas::calcularTotalAlquiler(PilaHistorial &historial) {
+    if (pL == NULL) {
+        cout << "\nNo hay tiendas registradas.\n";
+        return;
+    }
+
+    pnodoTienda actual = pL;
+    int total = 0;
+
+    while (actual != NULL) {
+        total += calcularAlquiler(actual->dato);
+        actual = actual->sig;
+    }
+
+    cout << "\nMonto total a recaudar por alquileres: S/. " << total << endl;
+
+    historial.apilar("Se calculo el total recaudado por alquileres", 0);
+}
