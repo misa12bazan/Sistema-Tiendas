@@ -492,6 +492,179 @@ void ListaTiendas::calcularTotalAlquiler(PilaHistorial &historial) {
         actual = actual->sig;
     }
 
+// ================= REGISTRO =================
+
+void registrarTienda(ListaTiendas &lista, ColaMantenimiento &cola, PilaHistorial &historial) {
+    Tienda t;
+    int cantidad, i;
+
+    cout << "\n===== REGISTRAR TIENDAS =====\n";
+    cout << "Cantidad actual de tiendas registradas: " << lista.obtenerCantidad() << endl;
+    cout << "Limite maximo de tiendas: " << MAX_TIENDAS << endl;
+
+    if (lista.obtenerCantidad() >= MAX_TIENDAS) {
+        cout << "\nYa se alcanzo el limite maximo de tiendas.\n";
+        return;
+    }
+
+    do {
+        cantidad = leerEnteroPositivo("Cuantas tiendas desea registrar: ");
+
+        if (lista.obtenerCantidad() + cantidad > MAX_TIENDAS) {
+            cout << "Error: solo puede registrar "
+                 << MAX_TIENDAS - lista.obtenerCantidad()
+                 << " tienda(s) mas.\n";
+        }
+
+    } while (lista.obtenerCantidad() + cantidad > MAX_TIENDAS);
+
+    for (i = 1; i <= cantidad; i++) {
+        cout << "\n===== TIENDA " << i << " DE " << cantidad << " =====\n";
+
+        t.id = leerEnteroPositivo("Ingrese ID de la tienda: ");
+
+        if (lista.buscarPorID(t.id) != NULL) {
+            cout << "Error: ID ya registrado. Intente nuevamente.\n";
+            i--;
+        } else {
+            cin.ignore();
+            cout << "Ingrese nombre de la tienda: ";
+            getline(cin, t.nombre);
+
+            cout << "Categoria de productos: ";
+            getline(cin, t.categoria);
+
+            t.ventasMensuales = leerEnteroPositivo("Ventas mensuales: ");
+
+            cout << "\nServicios adicionales:\n";
+
+            t.mantenimiento = leerOpcion01("Mantenimiento 1 = Si, 0 = No: ");
+            t.publicidad = leerOpcion01("Publicidad 1 = Si, 0 = No: ");
+
+            t.alquiler = 0;
+
+            lista.insertarFinal(t);
+
+            if (t.mantenimiento) {
+                cola.encolar(t.id);
+            }
+
+            historial.apilar("Se registro la tienda", t.id);
+
+            cout << "\nTienda registrada correctamente.\n";
+        }
+    }
+}
+
+void atenderMantenimiento(ColaMantenimiento &cola, PilaHistorial &historial) {
+    int id = cola.desencolar();
+
+    if (id == -1) {
+        cout << "\nNo hay solicitudes de mantenimiento pendientes.\n";
+        return;
+    }
+
+    cout << "\nSe atendio la solicitud de mantenimiento de la tienda ID: " << id << endl;
+    historial.apilar("Se atendio mantenimiento de la tienda", id);
+}
+
+// ================= MAIN =================
+
+int main() {
+    ListaTiendas lista;
+    ColaMantenimiento cola;
+    PilaHistorial historial;
+
+    int opcion;
+    int idActualizado;
+
+    do {
+        cout << "\n=========================================\n";
+        cout << " SISTEMA DE GESTION DE TIENDAS Y ALQUILERES\n";
+        cout << "=========================================\n";
+        cout << "1. Registrar Tienda\n";
+        cout << "2. Actualizar Tienda\n";
+        cout << "3. Buscar Tienda\n";
+        cout << "4. Mostrar Todas las Tiendas\n";
+        cout << "5. Calcular Alquiler de una Tienda\n";
+        cout << "6. Reporte General de Alquileres\n";
+        cout << "7. Reporte de Cobros Adicionales\n";
+        cout << "8. Calcular Total Recaudado\n";
+        cout << "9. Ver Cola de Mantenimiento\n";
+        cout << "10. Atender Mantenimiento\n";
+        cout << "11. Ver Historial de Acciones\n";
+        cout << "12. Desapilar Ultima Accion\n";
+        cout << "13. Salir\n";
+
+        opcion = leerEnteroPositivo("Seleccione una opcion: ");
+
+        switch (opcion) {
+            case 1:
+                registrarTienda(lista, cola, historial);
+                break;
+
+            case 2:
+                idActualizado = lista.actualizar();
+
+                if (idActualizado != -1) {
+                    historial.apilar("Se actualizo la tienda", idActualizado);
+                }
+
+                break;
+
+            case 3:
+                lista.buscar();
+                break;
+
+            case 4:
+                lista.mostrar();
+                break;
+
+            case 5:
+                lista.calcularAlquilerDeTienda(historial);
+                break;
+
+            case 6:
+                lista.reporteAlquileres(historial);
+                break;
+
+            case 7:
+                lista.reporteCobrosAdicionales(historial);
+                break;
+
+            case 8:
+                lista.calcularTotalAlquiler(historial);
+                break;
+
+            case 9:
+                cola.mostrar();
+                break;
+
+            case 10:
+                atenderMantenimiento(cola, historial);
+                break;
+
+            case 11:
+                historial.mostrar();
+                break;
+
+            case 12:
+                historial.desapilar();
+                break;
+
+            case 13:
+                cout << "\nSaliendo del sistema...\n";
+                break;
+
+            default:
+                cout << "\nOpcion no valida.\n";
+                break;
+        }
+
+    } while (opcion != 13);
+
+    return 0;
+}
     cout << "\nMonto total a recaudar por alquileres: S/. " << total << endl;
 
     historial.apilar("Se calculo el total recaudado por alquileres", 0);
